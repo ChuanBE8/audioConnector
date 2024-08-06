@@ -58,6 +58,8 @@ export class Server {
                     return;
                 }
 
+                console.log(`data: ${data}`);
+
                 const session = this.sessionMap.get(ws);
 
                 if (!session) {
