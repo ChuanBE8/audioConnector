@@ -58,8 +58,6 @@ export class Server {
                     return;
                 }
 
-                console.log(`data: ${data}`);
-
                 const session = this.sessionMap.get(ws);
 
                 if (!session) {
@@ -70,14 +68,21 @@ export class Server {
                 }
 
                 if (isBinary) {
+                    const binaryString = printBinary(2, 8); // 2 คือเลขฐานสิบที่จะถูกแปลงเป็นฐานสอง, 8 คือจำนวนหลักที่ต้องการ
+                    console.log(binaryString);
                     session.processBinaryMessage(data as Uint8Array);
                 } else {
+                    console.log(`data: ${data}`);
                     session.processTextMessage(data.toString());
                 }
             });
 
             this.createConnection(ws, request);
         });
+    }
+
+    private printBinary(num: number, length: number): string {
+        return num.toString(2).padStart(length, '0');
     }
 
     private createConnection(ws: WebSocket, request:Request) {
