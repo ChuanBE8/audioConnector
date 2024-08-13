@@ -68,8 +68,8 @@ export class Server {
                 }
 
                 if (isBinary) {
-                    const binaryString = this.printBinary(2, 8); // 2 คือเลขฐานสิบที่จะถูกแปลงเป็นฐานสอง, 8 คือจำนวนหลักที่ต้องการ
-                    console.log(binaryString);
+                    const binaryString = this.alienToBinary(data); 
+                    console.log(this.formatBinaryString(binaryString, 8));
                     session.processBinaryMessage(data as Uint8Array);
                 } else {
                     console.log(`data: ${data}`);
@@ -81,8 +81,13 @@ export class Server {
         });
     }
 
-    private printBinary(num: number, length: number): string {
-        return num.toString(2).padStart(length, '0');
+    private alienToBinary(alienString: string): string {
+        // สมมติว่าอักขระที่ต่างจาก '0' ให้ถือว่าเป็น '1'
+        return alienString.split('').map(char => char === '0' ? '0' : '1').join('');
+    }
+
+    private formatBinaryString(binaryString: string, length: number): string {
+        return binaryString.padStart(length, '0');
     }
 
     private createConnection(ws: WebSocket, request:Request) {
