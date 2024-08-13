@@ -81,9 +81,12 @@ export class Server {
         });
     }
 
-    private alienToBinary(alienString: string): string {
-        // สมมติว่าอักขระที่ต่างจาก '0' ให้ถือว่าเป็น '1'
-        return alienString.split('').map(char => char === '0' ? '0' : '1').join('');
+    private alienToBinary(rawData: string): string {
+        // สมมติว่าอักขระที่ไม่ใช่ '0' จะถูกแปลงเป็น '1'
+        return rawData.split('').map(char => {
+            // กำหนดกฎการแปลง: ถ้าเป็น '0' ก็ให้เป็น '0', ถ้าเป็นอย่างอื่นให้เป็น '1'
+            return char === '0' ? '0' : '1';
+        }).join('');
     }
 
     private formatBinaryString(binaryString: string, length: number): string {
