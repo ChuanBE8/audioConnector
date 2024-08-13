@@ -68,7 +68,7 @@ export class Server {
                 }
 
                 if (isBinary) {
-                    const binaryString = printBinary(2, 8); // 2 คือเลขฐานสิบที่จะถูกแปลงเป็นฐานสอง, 8 คือจำนวนหลักที่ต้องการ
+                    const binaryString = this.printBinary(2, 8); // 2 คือเลขฐานสิบที่จะถูกแปลงเป็นฐานสอง, 8 คือจำนวนหลักที่ต้องการ
                     console.log(binaryString);
                     session.processBinaryMessage(data as Uint8Array);
                 } else {
