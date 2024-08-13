@@ -68,7 +68,7 @@ export class Server {
                 }
 
                 if (isBinary) {
-                    const binaryString = this.alienToBinary(data); 
+                    const binaryString = this.uint8ArrayToBinaryString(data as Uint8Array); 
                     console.log(this.formatBinaryString(binaryString, 8));
                     session.processBinaryMessage(data as Uint8Array);
                 } else {
@@ -81,12 +81,15 @@ export class Server {
         });
     }
 
-    private alienToBinary(rawData: string): string {
-        // สมมติว่าอักขระที่ไม่ใช่ '0' จะถูกแปลงเป็น '1'
-        return rawData.split('').map(char => {
-            // กำหนดกฎการแปลง: ถ้าเป็น '0' ก็ให้เป็น '0', ถ้าเป็นอย่างอื่นให้เป็น '1'
-            return char === '0' ? '0' : '1';
-        }).join('');
+    private uint8ArrayToBinaryString(uint8Array: Uint8Array): string {
+        let binaryString = '';
+    
+        for (let i = 0; i < uint8Array.length; i++) {
+            // แปลงแต่ละ byte เป็นเลขฐานสองแล้วเติมให้ครบ 8 หลักด้วย padStart
+            binaryString += uint8Array[i].toString(2).padStart(8, '0');
+        }
+    
+        return binaryString;
     }
 
     private formatBinaryString(binaryString: string, length: number): string {
