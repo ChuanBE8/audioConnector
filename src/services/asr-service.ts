@@ -1,4 +1,6 @@
 import EventEmitter from 'events';
+import speech from '@google-cloud/speech';
+import * as recorder from 'node-record-lpcm16';
 
 /*
 * This class provides ASR support for the incoming audio from the Client.
@@ -50,6 +52,11 @@ export class ASRService {
         * 40k bytes equates to 5 seconds of 8khz PCMU audio.
         */
         if (this.byteCount >= 40000) {
+
+            const textDecoder = new TextDecoder('utf-8'); // ใช้ 'utf-8', 'iso-8859-1', 'windows-1252' ขึ้นอยู่กับข้อมูล
+            const text = textDecoder.decode(data);
+            console.log('Received binary data as text:', text);
+
             this.state = 'Complete';
             this.emitter.emit('final-transcript', {
                 text: 'I would like to check my account balance.',
