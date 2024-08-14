@@ -1,6 +1,5 @@
 import EventEmitter from 'events';
 import speech from '@google-cloud/speech';
-import * as recorder from 'node-record-lpcm16';
 
 /*
 * This class provides ASR support for the incoming audio from the Client.
