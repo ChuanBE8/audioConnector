@@ -68,8 +68,8 @@ export class Server {
                 }
 
                 if (isBinary) {
-                    const binaryString = this.uint8ArrayToBinaryString(data as Uint8Array); 
-                    console.log(this.formatBinaryString(binaryString, 8));
+                    //const binaryString = this.uint8ArrayToBinaryString(data as Uint8Array); 
+                    //console.log(this.formatBinaryString(binaryString, 8));
                     session.processBinaryMessage(data as Uint8Array);
                 } else {
                     console.log(`data: ${data}`);
