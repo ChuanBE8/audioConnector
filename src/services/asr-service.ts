@@ -43,7 +43,7 @@ export class ASRService {
         }
 
         this.byteCount += data.length;
-        console.log('byteCount:', byteCount);
+        console.log('byteCount:', this.byteCount);
 
         /*
         * If we get enough audio bytes, mark this instance as complete, send out the event,
