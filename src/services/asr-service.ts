@@ -18,7 +18,7 @@ import { SpeechClient } from '@google-cloud/speech';
 * the final transcript has been received.
 */
 export class ASRService {
-    private recognizeStream;
+    private recognizeStream: speech.v1.SpeechClient.StreamingRecognizeStream | null = null;
     private emitter = new EventEmitter();
     private state = 'None';
     private byteCount = 0;
