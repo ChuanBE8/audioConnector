@@ -36,21 +36,7 @@ export class ASRService {
             interimResults: false,
         };
         this.recognizeStream = client.streamingRecognize(request);
-        this.recognizeStream.on('data', (data) => {
-            var audioText = '';
-            const results = data.results || [];
-            for (const result of results) {
-                const transcript = result.alternatives[0].transcript;
-                console.log(`Transcription: ${transcript}`);
-                audioText += transcript;
-            }
-
-            this.state = 'Complete';
-            this.emitter.emit('final-transcript', {
-                text: audioText,
-                confidence: 1.0
-            });
-        });
+        this.recognizeStream.on('data', speechCallback);
         this.recognizeStream.on('error', (error) => {
             console.error('Error during speech recognition:', error);
         });
@@ -69,6 +55,22 @@ export class ASRService {
 
     getState(): string {
         return this.state;
+    }
+
+    speechCallback(data) {
+        var audioText = '';
+        const results = data.results || [];
+        for (const result of results) {
+            const transcript = result.alternatives[0].transcript;
+            console.log(`Transcription: ${transcript}`);
+            audioText += transcript;
+        }
+
+        this.state = 'Complete';
+        this.emitter.emit('final-transcript', {
+            text: audioText,
+            confidence: 1.0
+        });
     }
 
     /*
@@ -101,6 +103,8 @@ export class ASRService {
                 this.processingText = true;
                 console.log('End Chunk!!!');
                 this.recognizeStream.end();
+                this.recognizeStream.removeListener('data', speechCallback)
+                this.recognizeStream = null;
             }
             
             this.byteCount = 0;
