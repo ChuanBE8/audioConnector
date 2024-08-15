@@ -24,7 +24,7 @@ export class ASRService {
     private byteCount = 0;
     private processingText = false;
 
-    speechCallback(data: Any) {
+    speechCallback(data: protos.google.cloud.speech.v1.StreamingRecognizeResponse) {
         var audioText = '';
         const results = data.results || [];
         for (const result of results) {
