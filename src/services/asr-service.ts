@@ -80,7 +80,7 @@ export class ASRService {
             return this;
         }
 
-        this.recognizeStream.write(data);
+        if(this.recognizeStream != null) this.recognizeStream.write(data);
         this.byteCount += data.length;
         console.log('byteCount:', this.byteCount);
 
@@ -92,7 +92,7 @@ export class ASRService {
         */
         if (this.byteCount >= 40000 && this.processingText === false) {
 
-            this.recognizeStream.end();
+            if(this.recognizeStream != null) this.recognizeStream.end();
             this.processingText = true;
             
             this.byteCount = 0;
