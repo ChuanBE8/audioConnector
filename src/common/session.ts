@@ -142,6 +142,7 @@ export class Session {
             console.log(`Sending a ${message.type} message.`);
         }
         
+        console.log(`message: `+JSON.stringify(message));
         this.ws.send(JSON.stringify(message));
     }
 

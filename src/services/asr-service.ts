@@ -83,15 +83,15 @@ export class ASRService {
                   const transcript = result.alternatives[0].transcript;
                   console.log(`Transcription: ${transcript}`);
                 }
-            });
 
-            this.state = 'Complete';
-            this.emitter.emit('final-transcript', {
-                text: 'I would like to check my account balance.',
-                confidence: 1.0
+                this.state = 'Complete';
+                this.emitter.emit('final-transcript', {
+                    text: 'I would like to check my account balance.',
+                    confidence: 1.0
+                });
+                this.byteCount = 0;
+                return this;
             });
-            this.byteCount = 0;
-            return this;
         }
 
         this.state = 'Processing';
