@@ -33,7 +33,7 @@ export class ASRService {
             sampleRateHertz: 16000,
             languageCode: 'en-US',
             },
-            interimResults: true,
+            interimResults: false,
         };
         this.recognizeStream = client.streamingRecognize(request);
         this.recognizeStream.on('data', (data) => {
