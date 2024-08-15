@@ -82,7 +82,7 @@ export class ASRService {
             return this;
         }
 
-        if(this.recognizeStream != null) {
+        if(this.recognizeStream != null && this.processingText === false) {
             console.log('Write Chunk!!!');
             this.recognizeStream.write(data);
         }
@@ -95,13 +95,13 @@ export class ASRService {
         * 
         * 40k bytes equates to 5 seconds of 8khz PCMU audio.
         */
-        if (this.byteCount >= 10000 && this.processingText === false) {
+        if (this.byteCount >= 10000) {
 
             if(this.recognizeStream != null) {
                 console.log('End Chunk!!!');
                 this.recognizeStream.end();
+                this.processingText = true;
             }
-            this.processingText = true;
             
             this.byteCount = 0;
             return this;
