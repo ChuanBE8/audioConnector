@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { SpeechClient } from '@google-cloud/speech';
+import speech from '@google-cloud/speech';
 
 /*
 * This class provides ASR support for the incoming audio from the Client.
@@ -25,7 +25,7 @@ export class ASRService {
     private processingText = false;
 
     public ASRService() {
-        const client = new SpeechClient();
+        const client = new speech.SpeechClient();
         const request = {
             config: {
             encoding: 'LINEAR16' as const, // Explicitly cast to enum value
