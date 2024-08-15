@@ -57,7 +57,7 @@ export class ASRService {
             const text = textDecoder.decode(data);
             console.log('Received binary data as text:', text);*/
             const client = new SpeechClient();
-            const audioContent = Buffer.from(data, 'base64');
+            /*const audioContent = Buffer.from(data, 'base64');
             const request = {
                 config: {
                   encoding: 'LINEAR16', // หรือประเภทที่ตรงกับข้อมูลของคุณ
@@ -66,6 +66,15 @@ export class ASRService {
                 },
                 interimResults: false, // ใช้ผลลัพธ์ชั่วคราวหรือไม่
                  audio: { content: audioContent },
+            };*/
+            const request = {
+                config: {
+                  encoding: 'LINEAR16' as const, // Explicitly cast to enum value
+                  sampleRateHertz: 16000,
+                  languageCode: 'en-US',
+                },
+                interimResults: true,
+                audio: { content: Buffer.from(data) },
             };
             const recognizeStream = client.streamingRecognize(request);
             recognizeStream.on('data', (data) => {
