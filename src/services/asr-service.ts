@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import speech from '@google-cloud/speech';
+import { SpeechClient } from '@google-cloud/speech';
 
 /*
 * This class provides ASR support for the incoming audio from the Client.
@@ -53,9 +53,28 @@ export class ASRService {
         */
         if (this.byteCount >= 40000) {
 
-            const textDecoder = new TextDecoder('utf-8'); // ใช้ 'utf-8', 'iso-8859-1', 'windows-1252' ขึ้นอยู่กับข้อมูล
+            /*const textDecoder = new TextDecoder('utf-8'); // ใช้ 'utf-8', 'iso-8859-1', 'windows-1252' ขึ้นอยู่กับข้อมูล
             const text = textDecoder.decode(data);
-            console.log('Received binary data as text:', text);
+            console.log('Received binary data as text:', text);*/
+            const client = new SpeechClient();
+            const audioContent = Buffer.from(data, 'base64');
+            const request = {
+                config: {
+                  encoding: 'LINEAR16', // หรือประเภทที่ตรงกับข้อมูลของคุณ
+                  sampleRateHertz: 16000, // อัตราการสุ่มข้อมูล
+                  languageCode: 'en-US', // ภาษา
+                },
+                interimResults: false, // ใช้ผลลัพธ์ชั่วคราวหรือไม่
+                 audio: { content: audioContent },
+            };
+            const recognizeStream = client.streamingRecognize(request);
+            recognizeStream.on('data', (data) => {
+                const results = data.results || [];
+                for (const result of results) {
+                  const transcript = result.alternatives[0].transcript;
+                  console.log(`Transcription: ${transcript}`);
+                }
+            });
 
             this.state = 'Complete';
             this.emitter.emit('final-transcript', {
