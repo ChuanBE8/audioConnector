@@ -48,7 +48,8 @@ export class ASRService {
         const request = {
             config: {
             encoding: 'LINEAR16' as const, // Explicitly cast to enum value
-            sampleRateHertz: 16000,
+            sampleRateHertz: 8000,
+            audioChannelCount: 2, 
             languageCode: 'en-US',
             },
             interimResults: false,
@@ -99,7 +100,7 @@ export class ASRService {
         * 
         * 40k bytes equates to 5 seconds of 8khz PCMU audio.
         */
-        if (this.byteCount >= 10000) {
+        if (this.byteCount >= 40000) {
 
             if(this.recognizeStream != null) {
                 this.processingText = true;
