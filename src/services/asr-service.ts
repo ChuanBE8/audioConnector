@@ -95,7 +95,7 @@ export class ASRService {
         * 
         * 40k bytes equates to 5 seconds of 8khz PCMU audio.
         */
-        if (this.byteCount >= 40000 && this.processingText === false) {
+        if (this.byteCount >= 10000 && this.processingText === false) {
 
             if(this.recognizeStream != null) {
                 console.log('End Chunk!!!');
