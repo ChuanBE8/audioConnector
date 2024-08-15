@@ -24,7 +24,8 @@ export class ASRService {
     private byteCount = 0;
     private processingText = false;
 
-    public ASRService() {
+    constructor() {
+        console.log('Start Initial Speech');
         const client = new speech.SpeechClient();
         const request = {
             config: {
@@ -58,7 +59,7 @@ export class ASRService {
             console.log('Speech recognition ended');
             this.processingText = false;
         });
-        console.log('Initial Speech complete');
+        console.log('End Initial Speech');
     }
 
     on(event: string, listener: (...args: any[]) => void): ASRService {
