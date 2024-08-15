@@ -21,6 +21,7 @@ export class ASRService {
     private emitter = new EventEmitter();
     private state = 'None';
     private byteCount = 0;
+    private processingText = false;
 
     on(event: string, listener: (...args: any[]) => void): ASRService {
         this.emitter?.addListener(event, listener);
@@ -51,7 +52,7 @@ export class ASRService {
         * 
         * 40k bytes equates to 5 seconds of 8khz PCMU audio.
         */
-        if (this.byteCount >= 40000) {
+        if (this.byteCount >= 40000 && this.processingText === false) {
 
             /*const textDecoder = new TextDecoder('utf-8'); // ใช้ 'utf-8', 'iso-8859-1', 'windows-1252' ขึ้นอยู่กับข้อมูล
             const text = textDecoder.decode(data);
@@ -67,33 +68,46 @@ export class ASRService {
                 interimResults: false, // ใช้ผลลัพธ์ชั่วคราวหรือไม่
                  audio: { content: audioContent },
             };*/
+
+            this.processingText = true;
             const request = {
                 config: {
-                  encoding: 'LINEAR16' as const, // Explicitly cast to enum value
-                  sampleRateHertz: 16000,
-                  languageCode: 'en-US',
+                encoding: 'LINEAR16' as const, // Explicitly cast to enum value
+                sampleRateHertz: 16000,
+                languageCode: 'en-US',
                 },
                 interimResults: true,
                 audio: { content: Buffer.from(data) },
             };
             const recognizeStream = client.streamingRecognize(request);
             recognizeStream.on('data', (data) => {
+                var audioText = '';
                 const results = data.results || [];
                 for (const result of results) {
-                  const transcript = result.alternatives[0].transcript;
-                  console.log(`Transcription: ${transcript}`);
+                    const transcript = result.alternatives[0].transcript;
+                    console.log(`Transcription: ${transcript}`);
+                    text += transcript;
                 }
 
                 this.state = 'Complete';
                 this.emitter.emit('final-transcript', {
-                    text: 'I would like to check my account balance.',
+                    text: audioText,
                     confidence: 1.0
                 });
-                this.byteCount = 0;
-                return this;
             });
-        }
+            recognizeStream.on('error', (error) => {
+                console.error('Error during speech recognition:', error);
+            });
+            
+            recognizeStream.on('end', () => {
+                console.log('Speech recognition ended');
+                this.processingText = false;
+            });
 
+            this.byteCount = 0;
+            return this;
+        }
+        
         this.state = 'Processing';
         return this;
     }
