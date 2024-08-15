@@ -58,6 +58,7 @@ export class ASRService {
             console.log('Speech recognition ended');
             this.processingText = false;
         });
+        console.log('Initial Speech complete');
     }
 
     on(event: string, listener: (...args: any[]) => void): ASRService {
@@ -80,7 +81,10 @@ export class ASRService {
             return this;
         }
 
-        if(this.recognizeStream != null) this.recognizeStream.write(data);
+        if(this.recognizeStream != null) {
+            console.log('Write Chunk!!!');
+            this.recognizeStream.write(data);
+        }
         this.byteCount += data.length;
         console.log('byteCount:', this.byteCount);
 
@@ -92,7 +96,10 @@ export class ASRService {
         */
         if (this.byteCount >= 40000 && this.processingText === false) {
 
-            if(this.recognizeStream != null) this.recognizeStream.end();
+            if(this.recognizeStream != null) {
+                console.log('End Chunk!!!');
+                this.recognizeStream.end();
+            }
             this.processingText = true;
             
             this.byteCount = 0;
