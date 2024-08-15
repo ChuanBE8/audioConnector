@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import speech from '@google-cloud/speech';
+import speech, { protos } from '@google-cloud/speech';
 
 /*
 * This class provides ASR support for the incoming audio from the Client.
@@ -18,7 +18,7 @@ import speech from '@google-cloud/speech';
 * the final transcript has been received.
 */
 export class ASRService {
-    private recognizeStream: speech.v1.SpeechClient.StreamingRecognizeStream | null = null;
+    private recognizeStream: protos.google.cloud.speech.v1.Speech_StreamingRecognizeStream | null = null;
     private emitter = new EventEmitter();
     private state = 'None';
     private byteCount = 0;
