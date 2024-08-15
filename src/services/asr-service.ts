@@ -24,7 +24,7 @@ export class ASRService {
     private byteCount = 0;
     private processingText = false;
 
-    speechCallback(data) {
+    speechCallback(data: Uint8Array) {
         var audioText = '';
         const results = data.results || [];
         for (const result of results) {
