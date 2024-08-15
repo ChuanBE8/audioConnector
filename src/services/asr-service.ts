@@ -24,6 +24,22 @@ export class ASRService {
     private byteCount = 0;
     private processingText = false;
 
+    speechCallback(data) {
+        var audioText = '';
+        const results = data.results || [];
+        for (const result of results) {
+            const transcript = result.alternatives[0].transcript;
+            console.log(`Transcription: ${transcript}`);
+            audioText += transcript;
+        }
+
+        this.state = 'Complete';
+        this.emitter.emit('final-transcript', {
+            text: audioText,
+            confidence: 1.0
+        });
+    }
+
     constructor() {
         console.log('Start Initial Speech');
         const client = new speech.SpeechClient();
@@ -55,22 +71,6 @@ export class ASRService {
 
     getState(): string {
         return this.state;
-    }
-
-    speechCallback(data) {
-        var audioText = '';
-        const results = data.results || [];
-        for (const result of results) {
-            const transcript = result.alternatives[0].transcript;
-            console.log(`Transcription: ${transcript}`);
-            audioText += transcript;
-        }
-
-        this.state = 'Complete';
-        this.emitter.emit('final-transcript', {
-            text: audioText,
-            confidence: 1.0
-        });
     }
 
     /*
