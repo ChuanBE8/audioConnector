@@ -18,10 +18,47 @@ import { SpeechClient } from '@google-cloud/speech';
 * the final transcript has been received.
 */
 export class ASRService {
+    private recognizeStream;
     private emitter = new EventEmitter();
     private state = 'None';
     private byteCount = 0;
     private processingText = false;
+
+    public ASRService() {
+        const client = new SpeechClient();
+        const request = {
+            config: {
+            encoding: 'LINEAR16' as const, // Explicitly cast to enum value
+            sampleRateHertz: 16000,
+            languageCode: 'en-US',
+            },
+            interimResults: true,
+        };
+        this.recognizeStream = client.streamingRecognize(request);
+        this.recognizeStream.on('data', (data) => {
+            var audioText = '';
+            const results = data.results || [];
+            for (const result of results) {
+                const transcript = result.alternatives[0].transcript;
+                console.log(`Transcription: ${transcript}`);
+                audioText += transcript;
+            }
+
+            this.state = 'Complete';
+            this.emitter.emit('final-transcript', {
+                text: audioText,
+                confidence: 1.0
+            });
+        });
+        this.recognizeStream.on('error', (error) => {
+            console.error('Error during speech recognition:', error);
+        });
+        
+        this.recognizeStream.on('end', () => {
+            console.log('Speech recognition ended');
+            this.processingText = false;
+        });
+    }
 
     on(event: string, listener: (...args: any[]) => void): ASRService {
         this.emitter?.addListener(event, listener);
@@ -43,6 +80,7 @@ export class ASRService {
             return this;
         }
 
+        this.recognizeStream.write(data);
         this.byteCount += data.length;
         console.log('byteCount:', this.byteCount);
 
@@ -54,56 +92,9 @@ export class ASRService {
         */
         if (this.byteCount >= 40000 && this.processingText === false) {
 
-            /*const textDecoder = new TextDecoder('utf-8'); // ใช้ 'utf-8', 'iso-8859-1', 'windows-1252' ขึ้นอยู่กับข้อมูล
-            const text = textDecoder.decode(data);
-            console.log('Received binary data as text:', text);*/
-            const client = new SpeechClient();
-            /*const audioContent = Buffer.from(data, 'base64');
-            const request = {
-                config: {
-                  encoding: 'LINEAR16', // หรือประเภทที่ตรงกับข้อมูลของคุณ
-                  sampleRateHertz: 16000, // อัตราการสุ่มข้อมูล
-                  languageCode: 'en-US', // ภาษา
-                },
-                interimResults: false, // ใช้ผลลัพธ์ชั่วคราวหรือไม่
-                 audio: { content: audioContent },
-            };*/
-
+            this.recognizeStream.end();
             this.processingText = true;
-            const request = {
-                config: {
-                encoding: 'LINEAR16' as const, // Explicitly cast to enum value
-                sampleRateHertz: 16000,
-                languageCode: 'en-US',
-                },
-                interimResults: true,
-                audio: { content: Buffer.from(data) },
-            };
-            const recognizeStream = client.streamingRecognize(request);
-            recognizeStream.on('data', (data) => {
-                var audioText = '';
-                const results = data.results || [];
-                for (const result of results) {
-                    const transcript = result.alternatives[0].transcript;
-                    console.log(`Transcription: ${transcript}`);
-                    audioText += transcript;
-                }
-
-                this.state = 'Complete';
-                this.emitter.emit('final-transcript', {
-                    text: audioText,
-                    confidence: 1.0
-                });
-            });
-            recognizeStream.on('error', (error) => {
-                console.error('Error during speech recognition:', error);
-            });
             
-            recognizeStream.on('end', () => {
-                console.log('Speech recognition ended');
-                this.processingText = false;
-            });
-
             this.byteCount = 0;
             return this;
         }
