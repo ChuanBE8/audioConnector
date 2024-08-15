@@ -86,7 +86,7 @@ export class ASRService {
                 for (const result of results) {
                     const transcript = result.alternatives[0].transcript;
                     console.log(`Transcription: ${transcript}`);
-                    text += transcript;
+                    audioText += transcript;
                 }
 
                 this.state = 'Complete';
