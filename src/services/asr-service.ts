@@ -23,6 +23,29 @@ export class ASRService {
     private state = 'None';
     private byteCount = 0;
     private processingText = false;
+    private client = new speech.SpeechClient();
+    private request = {
+        config: {
+        encoding: 'LINEAR16' as const, // Explicitly cast to enum value
+        sampleRateHertz: 8000,
+        audioChannelCount: 2, 
+        languageCode: 'en-US',
+        },
+        interimResults: false,
+    };
+
+    startStream() {
+        this.recognizeStream = this.client.streamingRecognize(this.request);
+        this.recognizeStream.on('data', this.speechCallback);
+        this.recognizeStream.on('error', (error) => {
+            console.error('Error during speech recognition:', error);
+        });
+        
+        this.recognizeStream.on('end', () => {
+            console.log('Speech recognition ended');
+            this.processingText = false;
+        });
+    }
 
     speechCallback(data: protos.google.cloud.speech.v1.StreamingRecognizeResponse) {
         var audioText = '';
@@ -44,26 +67,8 @@ export class ASRService {
 
     constructor() {
         console.log('Start Initial Speech');
-        const client = new speech.SpeechClient();
-        const request = {
-            config: {
-            encoding: 'LINEAR16' as const, // Explicitly cast to enum value
-            sampleRateHertz: 8000,
-            audioChannelCount: 2, 
-            languageCode: 'en-US',
-            },
-            interimResults: false,
-        };
-        this.recognizeStream = client.streamingRecognize(request);
-        this.recognizeStream.on('data', this.speechCallback);
-        this.recognizeStream.on('error', (error) => {
-            console.error('Error during speech recognition:', error);
-        });
-        
-        this.recognizeStream.on('end', () => {
-            console.log('Speech recognition ended');
-            this.processingText = false;
-        });
+        //this.client = new speech.SpeechClient();
+        this.startStream();
         console.log('End Initial Speech');
     }
 
@@ -108,6 +113,8 @@ export class ASRService {
                 this.recognizeStream.end();
                 this.recognizeStream.removeListener('data', this.speechCallback)
                 this.recognizeStream = null;
+
+                this.startStream();
             }
             
             this.byteCount = 0;
