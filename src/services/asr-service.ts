@@ -97,6 +97,15 @@ export class ASRService {
             return this;
         }
 
+        const silenceThreshold = 0.01; // กำหนดค่าความเงียบ
+        const isSilent = this.detectSilence(data, silenceThreshold);
+
+        if (isSilent) {
+            console.log('Detected silence');
+        } else {
+            console.log('Detected sound');
+        }
+
         if(data && data.length > 0) {
             if(this.recognizeStream != null && this.processingText === false) {
                 console.log('Write Chunk!!!');
@@ -137,6 +146,15 @@ export class ASRService {
         
         this.state = 'Processing';
         return this;
+    }
+
+    detectSilence(audioData: Uint8Array, threshold: number): boolean {
+        let sum = 0;
+        for (let i = 0; i < audioData.length; i++) {
+            sum += audioData[i] * audioData[i]; // คำนวณพลังงาน (energy) ของข้อมูลเสียง
+        }
+        const average = sum / audioData.length;
+        return average < threshold; // หากพลังงานเฉลี่ยต่ำกว่าค่า threshold แสดงว่ามีความเงียบ
     }
 }
 
