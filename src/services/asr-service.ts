@@ -122,7 +122,7 @@ export class ASRService {
                 console.log('End Chunk!!!');
                 this.recognizeStream.end();
                 this.recognizeStream.removeListener('data', this.speechCallback)
-                this.recognizeStream.destroy();
+                //this.recognizeStream.destroy();
                 this.recognizeStream = null;
 
                 this.startStream();
