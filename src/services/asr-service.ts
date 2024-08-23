@@ -35,12 +35,7 @@ export class ASRService {
         },
         interimResults: false,
     };
-    private out_write_size = {
-        high: 160000,
-        medium: 80000,
-        low: 20000,
-        very_low: 1024
-    }; 
+    private empty_buffer = Buffer.alloc(1, 0);
 
     startStream() {
         this.recognizeStream = this.client.streamingRecognize(this.request);
@@ -108,6 +103,10 @@ export class ASRService {
                 this.recognizeStream.write(data);
             }
             this.byteCount += data.length;
+        } else {
+            // no data coming from stream, write 0's into stream
+            console.log("Nothing to write, buffer empty, writing dummy chunk");
+            recognizeStream.write(empty_buffer);
         }
         console.log('byteCount:', this.byteCount);
 
