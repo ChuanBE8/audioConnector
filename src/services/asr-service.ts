@@ -98,7 +98,7 @@ export class ASRService {
         }
 
         const silenceThreshold = 0.01; // กำหนดค่าความเงียบ
-        const isSilent = this.detectSilence(data, silenceThreshold);
+        const isSilent = this.calculateRMS(data, silenceThreshold);
 
         if (isSilent) {
             console.log('Detected silence');
@@ -156,6 +156,41 @@ export class ASRService {
         const average = sum / audioData.length;
         return average < threshold; // หากพลังงานเฉลี่ยต่ำกว่าค่า threshold แสดงว่ามีความเงียบ
     }
+
+    calculateRMS(audioData: Uint8Array, threshold: number): boolean {
+        let sumSquares = 0;
+        for (let i = 0; i < audioData.length; i++) {
+            sumSquares += audioData[i] * audioData[i];
+        }
+
+        var isSlient = false;
+        if(Math.sqrt(sumSquares / audioData.length) < threshold) isSlient = true;
+        return isSlient;
+    }
+
+    calculateZCR(audioData: Uint8Array, threshold: number): boolean {
+        let zeroCrossings = 0;
+        for (let i = 1; i < audioData.length; i++) {
+            if ((audioData[i - 1] > 0 && audioData[i] < 0) || (audioData[i - 1] < 0 && audioData[i] > 0)) {
+                zeroCrossings++;
+            }
+        }
+        var isSlient = false;
+        if(zeroCrossings / audioData.length < threshold) isSlient = true;
+        return isSlient;
+    }
+    
+    isSilence(audioData: Uint8Array, silenceThreshold: number, durationThreshold: number): boolean {
+        let silentSamples = 0;
+        for (let i = 0; i < audioData.length; i++) {
+            if (Math.abs(audioData[i]) < silenceThreshold) {
+                silentSamples++;
+            }
+        }
+        return (silentSamples / audioData.length) > durationThreshold;
+    }
+
+    
 }
 
 export class Transcript {
