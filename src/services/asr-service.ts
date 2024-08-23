@@ -67,10 +67,12 @@ export class ASRService {
         }
 
         this.state = 'Complete';
+        if(!this.emitter) this.emitter = new EventEmitter();
         this.emitter.emit('final-transcript', {
             text: audioText,
             confidence: 1.0
         });
+        
     }
 
     constructor() {
