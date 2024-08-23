@@ -106,7 +106,7 @@ export class ASRService {
         } else {
             // no data coming from stream, write 0's into stream
             console.log("Nothing to write, buffer empty, writing dummy chunk");
-            recognizeStream.write(empty_buffer);
+            recognizeStream.write(this.empty_buffer);
         }
         console.log('byteCount:', this.byteCount);
 
