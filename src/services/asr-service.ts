@@ -26,13 +26,21 @@ export class ASRService {
     private client = new speech.SpeechClient();
     private request = {
         config: {
-        encoding: 'LINEAR16' as const, // Explicitly cast to enum value
-        sampleRateHertz: 8000,
-        audioChannelCount: 2, 
-        languageCode: 'en-US',
+            encoding: 'LINEAR16' as const, // Explicitly cast to enum value
+            sampleRateHertz: 8000,
+            audioChannelCount: 2, 
+            languageCode: 'en-US',
+            model: 'default',
+            enableWordTimeOffsets: true,
         },
         interimResults: false,
     };
+    private out_write_size = {
+        high: 160000,
+        medium: 80000,
+        low: 20000,
+        very_low: 1024
+    }; 
 
     startStream() {
         this.recognizeStream = this.client.streamingRecognize(this.request);
@@ -92,11 +100,13 @@ export class ASRService {
             return this;
         }
 
-        if(this.recognizeStream != null && this.processingText === false) {
-            console.log('Write Chunk!!!');
-            this.recognizeStream.write(data);
+        if(data && data.length > 0) {
+            if(this.recognizeStream != null && this.processingText === false) {
+                console.log('Write Chunk!!!');
+                this.recognizeStream.write(data);
+            }
+            this.byteCount += data.length;
         }
-        this.byteCount += data.length;
         console.log('byteCount:', this.byteCount);
 
         /*
@@ -112,6 +122,7 @@ export class ASRService {
                 console.log('End Chunk!!!');
                 this.recognizeStream.end();
                 this.recognizeStream.removeListener('data', this.speechCallback)
+                this.recognizeStream.destroy();
                 this.recognizeStream = null;
 
                 this.startStream();
