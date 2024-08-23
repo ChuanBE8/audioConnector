@@ -97,8 +97,8 @@ export class ASRService {
             return this;
         }
 
-        const silenceThreshold = 0.1; // กำหนดค่าความเงียบ
-        const isSilent = this.calculateZCR(data, silenceThreshold);
+        const silenceThreshold = 0.01; // กำหนดค่าความเงียบ
+        const isSilent = this.isSilence(data, silenceThreshold, 0.9);
 
         if (isSilent) {
             console.log('Detected silence');
