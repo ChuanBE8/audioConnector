@@ -41,7 +41,7 @@ export class ASRService {
 
     startStream() {
         this.recognizeStream = this.client.streamingRecognize(this.request);
-        this.recognizeStream.on('data', this.speechCallback);
+        this.recognizeStream.on('data', this.speechCallback.bind(this));
         this.recognizeStream.on('error', (error) => {
             console.error('Error during speech recognition:', error);
         });
@@ -54,7 +54,7 @@ export class ASRService {
         });
     }
 
-    speechCallback(data: protos.google.cloud.speech.v1.StreamingRecognizeResponse) => {
+    speechCallback(data: protos.google.cloud.speech.v1.StreamingRecognizeResponse) {
         var audioText = '';
         const results = data.results || [];
         for (const result of results) {
