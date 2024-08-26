@@ -29,7 +29,7 @@ export class ASRService {
             encoding: 'MULAW' as const, // Explicitly cast to enum value
             sampleRateHertz: 8000,
             audioChannelCount: 1,
-            enableSeparateRecognitionPerChannel: false 
+            enableSeparateRecognitionPerChannel: false,
             languageCode: 'en-US',
             model: 'default',
             enableWordTimeOffsets: true,
