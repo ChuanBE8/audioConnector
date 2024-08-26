@@ -27,7 +27,7 @@ export class ASRService {
     private request = {
         config: {
             encoding: 'LINEAR16' as const, // Explicitly cast to enum value
-            sampleRateHertz: 8000,
+            sampleRateHertz: 16000,
             audioChannelCount: 2, 
             languageCode: 'en-US',
             model: 'default',
@@ -148,7 +148,7 @@ export class ASRService {
         return this;
     }
 
-    detectSilence(audioData: Uint8Array, threshold: number): boolean {
+    detectSilence(audioData: Uint8Array, threshold: number): boolean {                  //Alway sound. threshold 0.01
         let sum = 0;
         for (let i = 0; i < audioData.length; i++) {
             sum += audioData[i] * audioData[i]; // คำนวณพลังงาน (energy) ของข้อมูลเสียง
@@ -157,7 +157,7 @@ export class ASRService {
         return average < threshold; // หากพลังงานเฉลี่ยต่ำกว่าค่า threshold แสดงว่ามีความเงียบ
     }
 
-    calculateRMS(audioData: Uint8Array, threshold: number): boolean {
+    calculateRMS(audioData: Uint8Array, threshold: number): boolean {                   //Alway sound. threshold 0.01
         let sumSquares = 0;
         for (let i = 0; i < audioData.length; i++) {
             sumSquares += audioData[i] * audioData[i];
@@ -168,7 +168,7 @@ export class ASRService {
         return isSlient;
     }
 
-    calculateZCR(audioData: Uint8Array, threshold: number): boolean {
+    calculateZCR(audioData: Uint8Array, threshold: number): boolean {                   //Alway silence. threshold 0.1
         let zeroCrossings = 0;
         for (let i = 1; i < audioData.length; i++) {
             if ((audioData[i - 1] > 0 && audioData[i] < 0) || (audioData[i - 1] < 0 && audioData[i] > 0)) {
@@ -180,7 +180,7 @@ export class ASRService {
         return isSlient;
     }
     
-    isSilence(audioData: Uint8Array, silenceThreshold: number, durationThreshold: number): boolean {
+    isSilence(audioData: Uint8Array, silenceThreshold: number, durationThreshold: number): boolean {         //Alway sound. threshold 0.01, duration 0.9
         let silentSamples = 0;
         for (let i = 0; i < audioData.length; i++) {
             if (Math.abs(audioData[i]) < silenceThreshold) {
