@@ -30,7 +30,7 @@ export class ASRService {
             sampleRateHertz: 8000,
             audioChannelCount: 1,
             enableSeparateRecognitionPerChannel: false,
-            languageCode: 'en-US',
+            languageCode: 'th-TH', //th-TH  en-US
             model: 'default',
             enableWordTimeOffsets: true,
         },
