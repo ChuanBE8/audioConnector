@@ -26,14 +26,15 @@ export class ASRService {
     private client = new speech.SpeechClient();
     private request = {
         config: {
-            encoding: 'LINEAR16' as const, // Explicitly cast to enum value
-            sampleRateHertz: 16000,
-            audioChannelCount: 2, 
+            encoding: 'MULAW' as const, // Explicitly cast to enum value
+            sampleRateHertz: 8000,
+            audioChannelCount: 1,
+            enableSeparateRecognitionPerChannel: false 
             languageCode: 'en-US',
             model: 'default',
             enableWordTimeOffsets: true,
         },
-        interimResults: false,
+        interimResults: true,
     };
     private empty_buffer = Buffer.alloc(1, 0);
 
