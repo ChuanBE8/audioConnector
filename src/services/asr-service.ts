@@ -62,6 +62,7 @@ export class ASRService {
                 const transcript = result.alternatives[0].transcript;
                 console.log(`Transcription: ${transcript}`);
                 audioText += transcript;
+                if(transcript != undefined && transcript != null)
                 this.lastTranscript = transcript;
             }
         }
