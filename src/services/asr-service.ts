@@ -54,7 +54,7 @@ export class ASRService {
         });
     }
 
-    speechCallback(data: protos.google.cloud.speech.v1.StreamingRecognizeResponse) {
+    speechCallback(data: protos.google.cloud.speech.v1.StreamingRecognizeResponse) => {
         var audioText = '';
         const results = data.results || [];
         for (const result of results) {
@@ -62,8 +62,8 @@ export class ASRService {
                 const transcript = result.alternatives[0].transcript;
                 console.log(`Transcription: ${transcript}`);
                 audioText += transcript;
-                if(transcript != undefined && transcript != null)
-                this.lastTranscript = transcript;
+                if(transcript)
+                    this.lastTranscript = transcript;
             }
         }
 
