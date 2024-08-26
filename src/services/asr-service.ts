@@ -37,6 +37,7 @@ export class ASRService {
         interimResults: true,
     };
     private empty_buffer = Buffer.alloc(1, 0);
+    private lastTranscript = '';
 
     startStream() {
         this.recognizeStream = this.client.streamingRecognize(this.request);
@@ -47,6 +48,8 @@ export class ASRService {
         
         this.recognizeStream.on('end', () => {
             console.log('Speech recognition ended');
+            console.log('Last Transcript: ',this.lastTranscript);
+            
             this.processingText = false;
         });
     }
@@ -59,6 +62,7 @@ export class ASRService {
                 const transcript = result.alternatives[0].transcript;
                 console.log(`Transcription: ${transcript}`);
                 audioText += transcript;
+                this.lastTranscript = transcript;
             }
         }
 
