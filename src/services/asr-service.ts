@@ -133,21 +133,25 @@ export class ASRService {
         * 
         * 40k bytes equates to 5 seconds of 8khz PCMU audio.
         */
-        if (this.byteCount >= 40000) {
+        try {
+            if (this.byteCount >= 40000) {
 
-            if(this.recognizeStream != null) {
-                this.processingText = true;
-                console.log('End Chunk!!!');
-                this.recognizeStream.end();
-                this.recognizeStream.removeListener('data', this.speechCallback)
-                //this.recognizeStream.destroy();
-                this.recognizeStream = null;
+                if(this.recognizeStream != null) {
+                    this.processingText = true;
+                    console.log('End Chunk!!!');
+                    this.recognizeStream.end();
+                    this.recognizeStream.removeListener('data', this.speechCallback)
+                    //this.recognizeStream.destroy();
+                    this.recognizeStream = null;
 
-                this.startStream();
+                    this.startStream();
+                }
+                
+                this.byteCount = 0;
+                return this;
             }
-            
-            this.byteCount = 0;
-            return this;
+        } catch (error) {
+            console.error('Caught an error:', error.message);
         }
         
         this.state = 'Processing';
