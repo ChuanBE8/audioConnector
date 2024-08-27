@@ -7,7 +7,6 @@
 */
 import * as textToSpeech from '@google-cloud/text-to-speech';
 import { protos } from '@google-cloud/text-to-speech';
-import { Uint8Array } from 'buffer';
 const client = new textToSpeech.TextToSpeechClient();
 
 export class TTSService {
@@ -24,7 +23,7 @@ export class TTSService {
         }
     }
 
-    getAudioBytes(data: string): Promise<Uint8Array> {
+    async getAudioBytes(data: string): Promise<Uint8Array> {
         const client = new textToSpeech.TextToSpeechClient();
 
         const request: protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest = {
