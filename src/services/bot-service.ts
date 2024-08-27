@@ -50,7 +50,7 @@ export class BotResource {
     * This is a "dummy" implementation that will need to be replaced.
     */
     getBotResponse(data: string): Promise<BotResponse> {
-        const message = 'We are unable to help at this time.';
+        const message = 'ขอบคุณที่ติดต่อเข้ามาครับ';
 
         return this.ttsService.getAudioBytes(message)
             .then(audioBytes => new BotResponse('match', message)
