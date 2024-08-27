@@ -55,7 +55,7 @@ export class BotResource {
         return this.ttsService.getAudioBytes(message)
             .then(audioBytes => new BotResponse('match', message)
                 .withConfidence(1.0)
-                .withEndSession(true)
+                .withEndSession(false)
                 .withAudioBytes(audioBytes));
     }
 }
