@@ -37,19 +37,16 @@ export class ASRService {
         interimResults: true,
     };
     private empty_buffer = Buffer.alloc(1, 0);
-    private lastTranscript = '';
 
     startStream() {
         this.recognizeStream = this.client.streamingRecognize(this.request);
-        this.recognizeStream.on('data', this.speechCallback.bind(this));
+        this.recognizeStream.on('data', this.speechCallback);
         this.recognizeStream.on('error', (error) => {
             console.error('Error during speech recognition:', error);
         });
         
         this.recognizeStream.on('end', () => {
             console.log('Speech recognition ended');
-            console.log('Last Transcript: ',this.lastTranscript);
-            
             this.processingText = false;
         });
     }
@@ -62,8 +59,6 @@ export class ASRService {
                 const transcript = result.alternatives[0].transcript;
                 console.log(`Transcription: ${transcript}`);
                 audioText += transcript;
-                if(transcript)
-                    this.lastTranscript = transcript;
             }
         }
 

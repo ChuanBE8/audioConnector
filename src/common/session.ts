@@ -339,6 +339,7 @@ export class Session {
                         return;
                     }
 
+                    console.log(`Final Transcription: ${transcript.text}`);
                     this.sendTranscript(transcript.text, transcript.confidence, true);
                     
                     this.selectedBot?.getBotResponse(transcript.text)
