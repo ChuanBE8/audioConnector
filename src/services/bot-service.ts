@@ -52,11 +52,15 @@ export class BotResource {
     getBotResponse(data: string): Promise<BotResponse> {
         const message = 'ขอบคุณที่ติดต่อเข้ามาครับ';
 
-        return this.ttsService.getAudioBytes(message)
+        /*return this.ttsService.getAudioBytes(message)
             .then(audioBytes => new BotResponse('match', message)
                 .withConfidence(1.0)
                 .withEndSession(false)
-                .withAudioBytes(audioBytes));
+                .withAudioBytes(audioBytes));*/
+        return this.ttsService.getAudioBytes(message)
+            .then(audioBytes => new BotResponse('match', message)
+                .withConfidence(1.0)
+                .withEndSession(false));
     }
 }
 

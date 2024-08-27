@@ -355,6 +355,8 @@ export class Session {
 
                             if (response.audioBytes) {
                                 this.sendAudio(response.audioBytes);
+                            } else {
+                                this.sendText(response.text);
                             }
 
                             if (response.endSession) {
