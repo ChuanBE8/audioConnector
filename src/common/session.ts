@@ -163,6 +163,11 @@ export class Session {
         }
     }
 
+    sendText(message: String) {
+        console.log(`Sending ${message.length} text  in 1 message.`);
+        this.ws.send(message, { binary: false });
+    }
+
     sendBargeIn() {
         const bargeInEvent: EventEntityBargeIn = {
             type: 'barge_in',
@@ -410,6 +415,8 @@ export class Session {
 
                             if (response.audioBytes) {
                                 this.sendAudio(response.audioBytes);
+                            } else {
+                                this.sendText(response.text);
                             }
 
                             if (response.endSession) {
