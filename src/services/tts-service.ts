@@ -30,7 +30,7 @@ export class TTSService {
             input: { text: data },
             voice: {
                 languageCode: 'th-TH', // เลือกภาษาของเสียงที่ต้องการ
-                ssmlGender: 'MALE', // เลือกเพศของเสียง (MALE, FEMALE, NEUTRAL)
+                ssmlGender: 'NEUTRAL', // เลือกเพศของเสียง (MALE, FEMALE, NEUTRAL)
             },
             audioConfig: {
                 audioEncoding: 'MULAW', // รูปแบบของไฟล์เสียงที่ต้องการ (MP3, OGG_OPUS, LINEAR16, etc.)
