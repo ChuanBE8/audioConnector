@@ -30,10 +30,15 @@ export class TTSService {
             input: { text: data },
             voice: {
                 languageCode: 'th-TH', // เลือกภาษาของเสียงที่ต้องการ
-                ssmlGender: 'NEUTRAL', // เลือกเพศของเสียง (MALE, FEMALE, NEUTRAL)
+                ssmlGender: 'MALE', // เลือกเพศของเสียง (MALE, FEMALE, NEUTRAL)
             },
             audioConfig: {
                 audioEncoding: 'MULAW', // รูปแบบของไฟล์เสียงที่ต้องการ (MP3, OGG_OPUS, LINEAR16, etc.)
+                speakingRate: 1.0,      //0.25-4
+                pitch: 0,              //-20.0-20.0
+                volumeGainDb: 0,        //-96.0-16.0
+                sampleRateHertz: 8000,
+                effectsProfileId: ['telephony-class-application'] //telephony-class-application, handset-class-device, headphone-class-device
             },
         };
     
