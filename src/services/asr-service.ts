@@ -37,10 +37,11 @@ export class ASRService {
         interimResults: true,
     };
     private empty_buffer = Buffer.alloc(1, 0);
+    private finalTranscript = '';
 
     startStream() {
         this.recognizeStream = this.client.streamingRecognize(this.request);
-        this.recognizeStream.on('data', this.speechCallback);
+        this.recognizeStream.on('data', this.speechCallback.bind(this));
         this.recognizeStream.on('error', (error) => {
             console.error('Error during speech recognition:', error);
         });
@@ -48,6 +49,13 @@ export class ASRService {
         this.recognizeStream.on('end', () => {
             console.log('Speech recognition ended');
             this.processingText = false;
+
+            this.state = 'Complete';
+            if(!this.emitter) this.emitter = new EventEmitter();
+            this.emitter.emit('final-transcript', {
+                text: this.finalTranscript,
+                confidence: 1.0
+            });
         });
     }
 
@@ -59,16 +67,10 @@ export class ASRService {
                 const transcript = result.alternatives[0].transcript;
                 console.log(`Transcription: ${transcript}`);
                 audioText += transcript;
+                if(transcript)
+                    this.finalTranscript = transcript;
             }
         }
-
-        this.state = 'Complete';
-        if(!this.emitter) this.emitter = new EventEmitter();
-        this.emitter.emit('final-transcript', {
-            text: audioText,
-            confidence: 1.0
-        });
-        
     }
 
     constructor() {
@@ -98,7 +100,7 @@ export class ASRService {
             return this;
         }
 
-        const silenceThreshold = 0.01; // กำหนดค่าความเงียบ
+        /*const silenceThreshold = 0.01; // กำหนดค่าความเงียบ
         const isSilent = this.isSilence(data, silenceThreshold, 0.9);
 
         if (isSilent) {
@@ -106,10 +108,10 @@ export class ASRService {
         } else {
             console.log('Detected sound');
         }
-
+        */
         if(data && data.length > 0) {
             if(this.recognizeStream != null && this.processingText === false) {
-                console.log('Write Chunk!!!');
+                //console.log('Write Chunk!!!');
                 this.recognizeStream.write(data);
             }
             this.byteCount += data.length;
@@ -129,11 +131,14 @@ export class ASRService {
         * 40k bytes equates to 5 seconds of 8khz PCMU audio.
         */
         if (this.byteCount >= 40000) {
-
             if(this.recognizeStream != null) {
                 this.processingText = true;
                 console.log('End Chunk!!!');
-                this.recognizeStream.end();
+                try {
+                    this.recognizeStream.end();
+                } catch(error) {
+                    console.log(`error: ${error}`);
+                }
                 this.recognizeStream.removeListener('data', this.speechCallback)
                 //this.recognizeStream.destroy();
                 this.recognizeStream = null;
