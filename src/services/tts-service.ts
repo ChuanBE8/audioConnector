@@ -29,8 +29,8 @@ export class TTSService {
         const request: protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest = {
             input: { text: data },
             voice: {
-                languageCode: 'en-US', // เลือกภาษาของเสียงที่ต้องการ
-                ssmlGender: 'NEUTRAL', // เลือกเพศของเสียง (MALE, FEMALE, NEUTRAL)
+                languageCode: 'th-TH', // เลือกภาษาของเสียงที่ต้องการ
+                ssmlGender: 'MALE', // เลือกเพศของเสียง (MALE, FEMALE, NEUTRAL)
             },
             audioConfig: {
                 audioEncoding: 'MULAW', // รูปแบบของไฟล์เสียงที่ต้องการ (MP3, OGG_OPUS, LINEAR16, etc.)
