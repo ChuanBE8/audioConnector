@@ -164,7 +164,7 @@ export class Session {
     }
 
     sendText(message: String) {
-        console.log(`Sending ${message.length} text  in 1 message.`);
+        console.log(`Sending ${message.length} text in 1 message.`);
         this.ws.send(message, { binary: false });
     }
 
