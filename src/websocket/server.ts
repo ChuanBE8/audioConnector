@@ -24,14 +24,27 @@ export class Server {
         this.httpServer.on('upgrade', (request: Request, socket: any, head: any) => {
             console.log(`Received a connection request from ${request.url}.`);
 
-            const url = new URL(request.url || '', `http://${request.headers.host}`);
+            /*const url = new URL(request.url || '', `http://${request.headers.host}`);
             const channelId = url.searchParams.get('channelId');
             const transactionId = url.searchParams.get('transactionId');
             
             if (!channelId) {
                 socket.destroy(); // ถ้าไม่มี channelId ให้ปิดการเชื่อมต่อไปเลย
                 return;
+            }*/
+            const path = request.url || '';
+            const pathParts = path.split('/').filter(Boolean); // แยก path ออกเป็นส่วนๆ
+        
+            // ตรวจสอบว่ามีค่า channelId และ transactionId หรือไม่
+            if (pathParts.length < 2) {
+                socket.destroy(); // ถ้าไม่มี channelId หรือ transactionId ให้ปิดการเชื่อมต่อ
+                return;
             }
+        
+            //const channelId = pathParts[0];
+            //const transactionId = pathParts[1];
+            const channelId = '00001';
+            const transactionId = '00002';
 
             verifyRequestSignature(request, this.secretService)
                 .then(verifyResult => {
