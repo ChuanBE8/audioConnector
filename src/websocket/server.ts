@@ -24,6 +24,15 @@ export class Server {
         this.httpServer.on('upgrade', (request: Request, socket: any, head: any) => {
             console.log(`Received a connection request from ${request.url}.`);
 
+            const url = new URL(request.url || '', `http://${request.headers.host}`);
+            const channelId = url.searchParams.get('channelId');
+            const transactionId = url.searchParams.get('transactionId');
+            
+            if (!channelId) {
+                socket.destroy(); // ถ้าไม่มี channelId ให้ปิดการเชื่อมต่อไปเลย
+                return;
+            }
+
             verifyRequestSignature(request, this.secretService)
                 .then(verifyResult => {
                     /*if (verifyResult.code !== 'VERIFIED') {
@@ -35,12 +44,17 @@ export class Server {
 
                     this.wsServer.handleUpgrade(request, socket, head, (ws: WebSocket) => {
                         console.log('Authentication was successful.');
+                        (ws as any).channelId = channelId; 
+                        (ws as any).transactionId = transactionId;
                         this.wsServer.emit('connection', ws, request);
                     });
                 });
         });
 
         this.wsServer.on('connection', (ws: WebSocket, request: Request) => {
+            const channelId = (ws as any).channelId;
+            const transactionId = (ws as any).transactionId;
+
             ws.on('close', () => {
                 const session = this.sessionMap.get(ws);
                 console.log('WebSocket connection closed.');
@@ -70,6 +84,8 @@ export class Server {
                 if (isBinary) {
                     //const binaryString = this.uint8ArrayToBinaryString(data as Uint8Array); 
                     //console.log(this.formatBinaryString(binaryString, 8));
+                    console.log(`channelId: ${channelId}`);
+                    console.log(`transactionId: ${transactionId}`);
                     session.processBinaryMessage(data as Uint8Array);
                 } else {
                     console.log(`data: ${data}`);

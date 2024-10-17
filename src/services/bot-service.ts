@@ -27,7 +27,8 @@ export class BotResource {
     * This is a "dummy" implementation that will need to be replaced.
     */
     getInitialResponse(): Promise<BotResponse> {
-        const message = 'Hello and welcome to AudioConnector.';
+        //const message = 'Hello and welcome to AudioConnector.';
+        const message = 'สวัสดีครับ ต้องการติดต่อสอบถามเรื่องใดคะ';
 
         /*
         * The TTS Service has a "dummy" implementation that will need
@@ -51,6 +52,8 @@ export class BotResource {
     */
     getBotResponse(data: string): Promise<BotResponse> {
         const message = 'ขอบคุณที่ติดต่อเข้ามาครับ';
+
+        
 
         return this.ttsService.getAudioBytes(message)
             .then(audioBytes => new BotResponse('match', message)
