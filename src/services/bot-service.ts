@@ -60,7 +60,9 @@ export class BotResource {
             transactionId: transactionId,
             message: data,
         };
-        const message = await makeApiCall(url, requestBody);
+        const res = await makeApiCall(url, requestBody);
+        //if(res.status === 'success')
+        const message = res.message;
         console.log(`AI: ${message}`);
 
         return this.ttsService.getAudioBytes(message)

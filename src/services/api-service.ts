@@ -20,8 +20,7 @@ export async function makeApiCall(url: string, requestBody: any): Promise<string
 export async function makeGetApiCall(url: string): Promise<string> {
     try {
         const response = await axios.get(url);
-        // แปลงข้อมูล JSON ที่ตอบกลับมาเป็น string
-        return JSON.stringify(response.data);
+        return response.data;
     } catch (error) {
         console.error('Error making API call (GET):', error);
         return 'Error occurred';
