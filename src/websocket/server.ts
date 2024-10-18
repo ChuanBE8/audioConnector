@@ -68,6 +68,9 @@ export class Server {
             const channelId = (ws as any).channelId;
             const transactionId = (ws as any).transactionId;
 
+            console.log(`channelId: ${channelId}`);
+            console.log(`transactionId: ${transactionId}`);
+
             ws.on('close', () => {
                 const session = this.sessionMap.get(ws);
                 console.log('WebSocket connection closed.');
