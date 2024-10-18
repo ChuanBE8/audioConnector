@@ -409,7 +409,7 @@ export class Session {
                 .on('final-digits', (digits) => {
                     this.sendTranscript(digits, 1.0, true);
                     
-                    this.selectedBot?.getBotResponse(digits)
+                    this.selectedBot?.getBotResponse(digits, '', '')
                         .then((response: BotResponse) => {
                             if (response.text) {
                                 this.sendTurnResponse(response.disposition, response.text, response.confidence);
