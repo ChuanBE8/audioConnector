@@ -43,8 +43,8 @@ export class Server {
         
             //const channelId = pathParts[0];
             //const transactionId = pathParts[1];
-            const channelId = '0929505991';
-            const transactionId = '0';
+            const channelId = 'genesys01';
+            const transactionId = '0929505991';
 
             verifyRequestSignature(request, this.secretService)
                 .then(verifyResult => {
