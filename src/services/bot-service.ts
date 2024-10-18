@@ -60,6 +60,7 @@ export class BotResource {
             message: data,
         };
         const message = await makeApiCall(url, requestBody);
+        console.log(`message: ${message}`);
 
         return this.ttsService.getAudioBytes(message)
             .then(audioBytes => new BotResponse('match', message)
