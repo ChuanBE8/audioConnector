@@ -73,21 +73,6 @@ export class BotResource {
     }
 }
 
-async function makeApiCall(url: string, requestBody: any): Promise<string> {
-    try {
-        const response = await axios.post(url, requestBody, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        // แปลงข้อมูล JSON ที่ตอบกลับมาเป็น string
-        return JSON.stringify(response.data);
-    } catch (error) {
-        console.error('Error making API call:', error);
-        return 'Error occurred';
-    }
-}
-
 export class BotResponse {
     disposition: BotTurnDisposition;
     text: string;
