@@ -16,6 +16,12 @@ export class BotService {
     }
 }
 
+interface ApiResponse {
+    endChat: boolean;
+    message: string;
+    status: string;
+}
+
 /*
 * This class provides support for the various methods needed to interact with an Bot.
 */
@@ -60,9 +66,10 @@ export class BotResource {
             transactionId: transactionId,
             message: data,
         };
-        const res = await makeApiCall(url, requestBody);
+        const resStr = await makeApiCall(url, requestBody);
+        const resObj: ApiResponse = JSON.parse(resStr);
         //if(res.status === 'success')
-        const message = res.message;
+        const message = resObj.message;
         console.log(`AI: ${message}`);
 
         return this.ttsService.getAudioBytes(message)
