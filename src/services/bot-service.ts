@@ -53,6 +53,7 @@ export class BotResource {
     */
     async getBotResponse(data: string, channelId: string, transactionId: string): Promise<BotResponse> {
         //const message = 'ขอบคุณที่ติดต่อเข้ามาครับ';
+        console.log(`User: ${data}`);
         const url = 'https://bo-bot-service-29514950838.us-central1.run.ap/callback'
         const requestBody = {
             channelId: channelId,
@@ -60,7 +61,7 @@ export class BotResource {
             message: data,
         };
         const message = await makeApiCall(url, requestBody);
-        console.log(`message: ${message}`);
+        console.log(`AI: ${message}`);
 
         return this.ttsService.getAudioBytes(message)
             .then(audioBytes => new BotResponse('match', message)
