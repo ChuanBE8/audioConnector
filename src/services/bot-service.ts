@@ -1,6 +1,7 @@
 import { JsonStringMap } from "../protocol/core";
 import { BotTurnDisposition } from "../protocol/voice-bots";
 import { TTSService } from "./tts-service";
+import { makeApiCall } from './api-service';
 
 /*
 * This class provides support for retreiving a Bot Resource based on the supplied
@@ -50,10 +51,15 @@ export class BotResource {
     * 
     * This is a "dummy" implementation that will need to be replaced.
     */
-    getBotResponse(data: string): Promise<BotResponse> {
-        const message = 'ขอบคุณที่ติดต่อเข้ามาครับ';
-
-        
+    async getBotResponse(data: string, channelId: string, transactionId: string): Promise<BotResponse> {
+        //const message = 'ขอบคุณที่ติดต่อเข้ามาครับ';
+        const url = 'https://bo-bot-service-29514950838.us-central1.run.ap/callback'
+        const requestBody = {
+            channelId: channelId,
+            transactionId: transactionId,
+            message: data,
+        };
+        const message = await makeApiCall(url, requestBody);
 
         return this.ttsService.getAudioBytes(message)
             .then(audioBytes => new BotResponse('match', message)
@@ -64,6 +70,21 @@ export class BotResource {
             .then(audioBytes => new BotResponse('match', message)
                 .withConfidence(1.0)
                 .withEndSession(false));*/
+    }
+}
+
+async function makeApiCall(url: string, requestBody: any): Promise<string> {
+    try {
+        const response = await axios.post(url, requestBody, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        // แปลงข้อมูล JSON ที่ตอบกลับมาเป็น string
+        return JSON.stringify(response.data);
+    } catch (error) {
+        console.error('Error making API call:', error);
+        return 'Error occurred';
     }
 }
 

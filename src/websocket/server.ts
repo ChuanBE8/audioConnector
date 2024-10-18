@@ -68,8 +68,8 @@ export class Server {
             const channelId = (ws as any).channelId;
             const transactionId = (ws as any).transactionId;
 
-            console.log(`channelId: ${channelId}`);
-            console.log(`transactionId: ${transactionId}`);
+            //console.log(`channelId: ${channelId}`);
+            //console.log(`transactionId: ${transactionId}`);
 
             ws.on('close', () => {
                 const session = this.sessionMap.get(ws);
@@ -100,9 +100,9 @@ export class Server {
                 if (isBinary) {
                     //const binaryString = this.uint8ArrayToBinaryString(data as Uint8Array); 
                     //console.log(this.formatBinaryString(binaryString, 8));
-                    console.log(`channelId: ${channelId}`);
-                    console.log(`transactionId: ${transactionId}`);
-                    session.processBinaryMessage(data as Uint8Array);
+                    //console.log(`channelId: ${channelId}`);
+                    //console.log(`transactionId: ${transactionId}`);
+                    session.processBinaryMessage(data as Uint8Array, channelId, transactionId);
                 } else {
                     console.log(`data: ${data}`);
                     session.processTextMessage(data.toString());

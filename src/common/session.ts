@@ -300,7 +300,7 @@ export class Session {
     * 
     * See `asr-service` in the `services` folder for more information.
     */
-    processBinaryMessage(data: Uint8Array) {
+    processBinaryMessage(data: Uint8Array, channelId: string, transactionId: string) {
         if (this.disconnecting || this.closed || !this.selectedBot) {
             return;
         }
@@ -347,7 +347,7 @@ export class Session {
                     console.log(`Final Transcription: ${transcript.text}`);
                     this.sendTranscript(transcript.text, transcript.confidence, true);
                     
-                    this.selectedBot?.getBotResponse(transcript.text)
+                    this.selectedBot?.getBotResponse(transcript.text, channelId, transactionId)
                         .then((response: BotResponse) => {
                             if (response.text) {
                                 this.sendTurnResponse(response.disposition, response.text, response.confidence);
