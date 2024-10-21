@@ -24,8 +24,8 @@ export class Server {
         this.httpServer.on('upgrade', (request: Request, socket: any, head: any) => {
             console.log(`Received a connection request from ${request.url}.`);
             console.log(`method: ${request.method}.`);
-            console.log(`headers: ${request.headers}.`);
-            console.log(`trailers: ${request.trailers}.`);
+            console.log('headers: '+JSON.stringify(request.headers));
+            console.log('trailers: '+JSON.stringify(request.trailers));
 
             /*const url = new URL(request.url || '', `http://${request.headers.host}`);
             const channelId = url.searchParams.get('channelId');
